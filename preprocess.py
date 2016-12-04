@@ -1,6 +1,7 @@
 from nltk.tokenize import sent_tokenize
 import os
 
+# Returns dictionary mapping authors to list of passages
 def parse_text():
 	directory = os.listdir('AUTHORS')
 	result = {}
