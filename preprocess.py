@@ -1,4 +1,4 @@
-# from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize
 import os
 
 def parse_text():
@@ -10,12 +10,14 @@ def parse_text():
 		for file in files:
 			with open('AUTHORS/' + author + '/' + file, 'r') as INPUTFILE:
 				text = INPUTFILE.read()
-			paragraphs = text.split('\n\n'):
-			for paragraph in paragraphs:
-				if len(paragraph.split()) > 10:
-					result[author].append(paragraph)
-		print '\n'
-	return
+			sentences = sent_tokenize(text)
+			sentences = [' '.join(sentence.split()) for sentence in sentences]
+			sentences = list(chunks(sentences, 50))
+			sentences = [' '.join(sentence) for sentence in sentences]
+			result[author] += sentences
+	return result
 
-if __name__ == '__main__':
-	parse_text()
+def chunks(l, n):
+    # Yield successive n-sized chunks from l
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
