@@ -7,11 +7,16 @@ def main():
 	with open('data.json', 'r') as fp:
 		data = json.load(fp)
 
-	count_passages = 0
-	authors = list(data.keys())
+	feature_folds = [[]]*5
+	label_folds = [[]]*5
+	
+	# Make folds
 	for author in data:
-		count_passages += len(data[author])
-	print count_passages
+		for ind,passage in enumerate(data[author]):
+			feature_folds[ind%5].append(passage)
+			label_folds[ind%5].append(author)
+
+
 	return
 
 if __name__ == '__main__':
