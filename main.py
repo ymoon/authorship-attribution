@@ -2,6 +2,26 @@ import sys, os, json
 from preprocess import parse_text
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
+from stylometry_features.py import get_stylometry_features
+from common_word_feature.py import feature_extract
+
+def getFeatures(passages):
+	features = []
+	for p in passages:
+		new_feat_vec = []
+
+		# get stylo feats
+		lex_feats, punct_feats = get_stylometry_features(p)
+		# get common/uncommon words lists
+		common_list, stop_word_list = feature_extract(p)
+
+		# Concatenate feats
+		new_feat_vec += lex_feats + punct_feats
+		new_feat_vec.append(common_list)
+		new_feat_vec.append(stop_word_list)
+
+		# append feature vector
+		features.append(new_feat_vec)
 
 def main():
 	if not os.path.exists('data.json'):

@@ -4,7 +4,7 @@ import glob
 import os
 from nltk.tokenize import sent_tokenize, word_tokenize
 
-def getLexPuncFeatures(passage):
+def get_stylometry_features(passage):
     lex_fv = np.zeros(4)
     punct_fv = np.zeros(4)
 

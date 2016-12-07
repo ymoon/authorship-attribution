@@ -30,10 +30,12 @@ def feature_extract(paragraph):
                 if (len(word_list) < 10):
                     word_list.append(f_dist[iter][0])
         iter += 1
+    '''
     for word in word_list:
         print(word)
     for word in stop_list:
         print(word)
+    '''
     return word_list, stop_list
 
 #if __name__ == "__main__":
