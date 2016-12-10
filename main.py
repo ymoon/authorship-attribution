@@ -2,8 +2,8 @@ import sys, os, json
 from preprocess import parse_text
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
-from stylometry_features.py import get_stylometry_features
-from common_word_feature.py import feature_extract
+from stylometry_features import get_stylometry_features
+from common_word_feature import feature_extract
 
 def getFeatures(passages):
 	features = []
@@ -68,8 +68,8 @@ def main():
 				test_labels += label_folds[k]
 
 		# Get features
-		#train_features = getFeatures(train_passages)
-		#test_features = getFeatures(test_passages)
+		train_features = getFeatures(train_passages)
+		test_features = getFeatures(test_passages)
 
 		# Fit SVM classifier and test
 		svc_clf.fit(train_features, train_labels)
