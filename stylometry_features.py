@@ -2,11 +2,32 @@ import numpy as np
 import nltk
 import glob
 import os
-from nltk.tokenize import sent_tokenize, word_tokenize, pos_tag
+from collections import OrderedDict
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk import pos_tag
 
 def get_stylometry_features(passage):
     lex_fv = np.zeros(4)
     punct_fv = np.zeros(4)
+
+    # Load bigrams file
+    bigrams = set()
+    f = open('bigrams.txt', 'r')
+    for line in f:
+        bigrams.add(line)
+    f.close()
+
+    bigram_frequency = OrderedDict()
+    for i in bigrams:
+        bigram_frequency[i] = 0
+    for first, second in zip(passage, passage[1:]):
+        bigram = first + second
+        if bigram in bigrams:
+            bigram_frequency[bigram] += 1
+    
+    bigrams_list = []
+    for key, value in bigram_frequency.items():
+        bigrams_list.append(value)
 
     # note: the nltk.word_tokenize includes punctuation
     tokens = nltk.word_tokenize(passage.lower())
@@ -42,4 +63,4 @@ def get_stylometry_features(passage):
     # Apostrophes per sentence
     punct_fv[3] = tokens.count("!") / float(len(sentences))
 
-    return lex_fv, punct_fv
+    return lex_fv, punct_fv, bigrams_list
