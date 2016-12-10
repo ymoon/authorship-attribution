@@ -2,7 +2,7 @@ import numpy as np
 import nltk
 import glob
 import os
-from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize, pos_tag
 
 def get_stylometry_features(passage):
     lex_fv = np.zeros(4)
@@ -19,7 +19,7 @@ def get_stylometry_features(passage):
     avg_tags = 0
     tags = set()
     for i in sent_tokenize(passage):
-        for word, tag in word_tokenize(i):
+        for word, tag in pos_tag(word_tokenize(i)):
             tags.add(tag)
         avg_tags += len(tags)
         tags.clear()
