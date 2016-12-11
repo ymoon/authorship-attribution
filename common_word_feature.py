@@ -2,6 +2,7 @@ import nltk
 import numpy as np
 import glob
 import os
+from collections import OrderedDict
 from nltk.corpus import stopwords
 from nltk import FreqDist
 
@@ -11,7 +12,28 @@ def feature_extract(paragraph):
     tokens = nltk.word_tokenize(paragraph.lower())
     f_dist = FreqDist(tokens)
     f_dist = f_dist.most_common()
-    
+
+    #Load word file
+    words = set()
+    f = open('words.txt','r')
+    for line in f:
+        line = line.strip()
+        words.add(line)
+    f.close()
+
+    word_frequency = OrderedDict()
+    for i in words:
+        word_frequency[i] = 0
+    for token in tokens:
+        if token in words:
+            word_frequency[token] += 1
+
+    word_list = []
+    for key, value in word_frequency.items():
+        word_list.append(value)
+
+    return word_list
+    '''
     punctuation_list = ['.', ';', '!', ',', '?']
     
     word_found = 0
@@ -30,13 +52,12 @@ def feature_extract(paragraph):
                 if (len(word_list) < 10):
                     word_list.append(f_dist[iter][0])
         iter += 1
-    '''
     for word in word_list:
         print(word)
     for word in stop_list:
         print(word)
-    '''
     return word_list, stop_list
+    '''
 
 #if __name__ == "__main__":
 #    print(feature_extract("""The cow went into the barn and sat down.
