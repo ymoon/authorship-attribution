@@ -8,22 +8,25 @@ from common_word_feature import feature_extract
 
 def getFeatures(passages):
 	stylo_features = []
-	bigram_features = []
-	word_features = []
+	# bigram_features = []
+	# word_features = []
 	for p in passages:
 		# get stylo feats
 		stylo_feats = get_stylometry_features(p)
+
 		# get bigram frequencies
-		bigrams = get_n_gram_features(p)
+		# bigrams = get_n_gram_features(p)
+
 		# get word frequencies
-		word_freq_list = feature_extract(p)
+		# word_freq_list = feature_extract(p)
 
 		# append to feature matrices
 		stylo_features.append(stylo_feats)
-		bigram_features.append(bigrams)
-		word_features.append(word_freq_list)
+		# bigram_features.append(bigrams)
+		# word_features.append(word_freq_list)
 
-	return stylo_features, bigram_features, word_features
+	# return stylo_features, bigram_features, word_features
+	return stylo_features
 
 
 def main():
@@ -78,15 +81,17 @@ def main():
 				test_labels += label_folds[k]
 
 		# Get features
-		stylo_train, bigram_train, wordfreq_train = getFeatures(train_passages)
-		stylo_test, bigram_test, wordfreq_test = getFeatures(test_passages)
+		# stylo_train, bigram_train, wordfreq_train = getFeatures(train_passages)
+		stylo_train = getFeatures(train_passages)
+		# stylo_test, bigram_test, wordfreq_test = getFeatures(test_passages)
+		stylo_test = getFeatures(test_passages)
 
 		# Fit SVM stylometry classifier and test
 		stylo_clf.fit(stylo_train, train_labels)
 		stylo_acc = stylo_clf.score(stylo_test, test_labels)
 		stylo_acc_sum += stylo_acc
 
-
+		'''
 		# Fit SVM character bigram classifier and test
 		bigram_clf.fit(bigram_train, train_labels)
 		bigram_acc = bigram_clf.score(bigram_test, test_labels)
@@ -96,7 +101,7 @@ def main():
 		wordfreq_clf.fit(wordfreq_train, train_labels)
 		wordfreq_acc = wordfreq_clf.score(wordfreq_test, test_labels)
 		wordfreq_acc_sum += wordfreq_acc
-
+		'''
 		'''
 		# Fit and test SGD classifier
 		sgd_clf.fit(train_features, train_labels)
@@ -107,12 +112,12 @@ def main():
 
 	# Calculate and print total accuracies
 	total_stylo_acc = stylo_acc_sum / 5.0
-	total_bigram_acc = bigram_acc_sum / 5.0
-	total_wordfreq_acc = wordfreq_acc_sum / 5.0
+	# total_bigram_acc = bigram_acc_sum / 5.0
+	# total_wordfreq_acc = wordfreq_acc_sum / 5.0
 
 	print "Stylometry accuracy: ", total_stylo_acc
-	print "Bigram freq accuracy: ", total_bigram_acc
-	print "Word freq accuracy: ", total_wordfreq_acc
+	# print "Bigram freq accuracy: ", total_bigram_acc
+	# print "Word freq accuracy: ", total_wordfreq_acc
 
 	return
 
