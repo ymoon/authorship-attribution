@@ -48,10 +48,9 @@ def get_stylometry_features(passage):
 def get_n_gram_features(passage):
     # Load bigrams file
     bigrams = set()
-    f = open('bigrams.txt', 'r')
-    for line in f:
-        bigrams.add(line[:-1])
-    f.close()
+    with open('bigrams.txt', 'r') as INPUTFILE:
+        for line in INPUTFILE.readlines():
+            bigrams.add(line)            
 
     bigram_frequency = OrderedDict()
     for i in bigrams:
