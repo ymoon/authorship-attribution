@@ -13,14 +13,13 @@ def getFeatures(passages):
 		# get stylo feats
 		lex_feats, punct_feats, bigrams = get_stylometry_features(p)
 		# get common/uncommon words lists
-		common_list, stop_word_list = feature_extract(p)
+		word_freq_list = feature_extract(p)
 
 		# Concatenate feats
 		new_feat_vec.append(lex_feats)
 		new_feat_vec.append(punct_feats)
 		new_feat_vec.append(bigrams)
-		new_feat_vec.append(common_list)
-		new_feat_vec.append(stop_word_list)
+		new_feat_vec.append(word_freq_list)
 
 		# append feature vector
 		features.append(new_feat_vec)
