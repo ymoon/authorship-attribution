@@ -11,8 +11,6 @@ def getFeatures(passages):
 	bigram_features = []
 	word_features = []
 	for p in passages:
-		new_stylo_vec = []
-
 		# get stylo feats
 		stylo_feats = get_stylometry_features(p)
 		# get bigram frequencies
@@ -21,7 +19,7 @@ def getFeatures(passages):
 		word_freq_list = feature_extract(p)
 
 		# append to feature matrices
-		stylo_features.append(new_feat_vec)
+		stylo_features.append(stylo_feats)
 		bigram_features.append(bigrams)
 		word_features.append(word_freq_list)
 
@@ -29,9 +27,14 @@ def getFeatures(passages):
 
 
 def main():
-	if not os.path.exists('data.json'):
+	# if not os.path.exists('data.json'):
+	# 	parse_text()
+	# with open('data.json', 'r') as fp:
+	# 	data = json.load(fp)
+
+	if not os.path.exists('sample.json'):
 		parse_text()
-	with open('data.json', 'r') as fp:
+	with open('sample.json', 'r') as fp:
 		data = json.load(fp)
 
 	# Initialize dictionaries that contain folds
