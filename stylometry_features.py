@@ -7,27 +7,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk import pos_tag
 
 def get_stylometry_features(passage):
-    lex_fv = np.zeros(4)
-    punct_fv = np.zeros(4)
-
-    # Load bigrams file
-    bigrams = set()
-    f = open('bigrams.txt', 'r')
-    for line in f:
-        bigrams.add(line)
-    f.close()
-
-    bigram_frequency = OrderedDict()
-    for i in bigrams:
-        bigram_frequency[i] = 0
-    for first, second in zip(passage, passage[1:]):
-        bigram = first + second
-        if bigram in bigrams:
-            bigram_frequency[bigram] += 1
-    
-    bigrams_list = []
-    for key, value in bigram_frequency.items():
-        bigrams_list.append(value)
+    stylo_fv = np.zeros(8)
 
     # note: the nltk.word_tokenize includes punctuation
     tokens = nltk.word_tokenize(passage.lower())
@@ -46,21 +26,41 @@ def get_stylometry_features(passage):
         tags.clear()
 
     # average number of words per sentence
-    lex_fv[0] = words_per_sentence.mean()
+    stylo_fv[0] = words_per_sentence.mean()
     # sentence length variation
-    lex_fv[1] = words_per_sentence.std()
+    stylo_fv[1] = words_per_sentence.std()
     # Lexical diversity
-    lex_fv[2] = len(vocab) / float(len(words))
+    stylo_fv[2] = len(vocab) / float(len(words))
     # Average unique POS tags per sentence
-    lex_fv[3] = float(avg_tags) / float(len(sent_tokenize(passage)))
+    stylo_fv[3] = float(avg_tags) / float(len(sent_tokenize(passage)))
  
     # Commas per sentence
-    punct_fv[0] = tokens.count(",") / float(len(sentences))
+    stylo_fv[4] = tokens.count(",") / float(len(sentences))
     # Semicolons per sentence
-    punct_fv[1] = tokens.count(";") / float(len(sentences))
+    stylo_fv[5] = tokens.count(";") / float(len(sentences))
     # Colons per sentence
-    punct_fv[2] = tokens.count(":") / float(len(sentences))
+    stylo_fv[6] = tokens.count(":") / float(len(sentences))
     # Apostrophes per sentence
-    punct_fv[3] = tokens.count("!") / float(len(sentences))
+    stylo_fv[7] = tokens.count("!") / float(len(sentences))
 
-    return lex_fv, punct_fv, bigrams_list
+    return stylo_fv
+
+def get_n_gram_features(passage):
+    # Load bigrams file
+    bigrams = set()
+    f = open('bigrams.txt', 'r')
+    for line in f:
+        bigrams.add(line)
+    f.close()
+
+    bigram_frequency = OrderedDict()
+    for i in bigrams:
+        bigram_frequency[i] = 0
+    for first, second in zip(passage, passage[1:]):
+        bigram = first + second
+        if bigram in bigrams:
+            bigram_frequency[bigram] += 1
+    
+    bigrams_list = []
+    for key, value in bigram_frequency.items():
+        bigrams_list.append(value)
