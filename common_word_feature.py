@@ -18,7 +18,7 @@ def feature_extract(paragraph):
     f = open('words.txt','r')
     for line in f:
         line = line.strip()
-        words.add(line)
+        words.add(line[:-1])
     f.close()
 
     word_frequency = OrderedDict()

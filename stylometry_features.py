@@ -50,7 +50,7 @@ def get_n_gram_features(passage):
     bigrams = set()
     f = open('bigrams.txt', 'r')
     for line in f:
-        bigrams.add(line)
+        bigrams.add(line[:-1])
     f.close()
 
     bigram_frequency = OrderedDict()
