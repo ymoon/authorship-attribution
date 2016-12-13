@@ -36,14 +36,20 @@ def main():
 	# with open('data.json', 'r') as fp:
 	# 	data = json.load(fp)
 
-	file_name = sys.argv[1]
-	classifier = sys.argv[2]
+	if len(sys.argv) == 3:
+		file_name = sys.argv[1]
+		classifier = sys.argv[2]
+		print file_name
+		# if not os.path.exists('sample.json'):
+			# parse_text()
+		with open('samples/' + file_name , 'r') as fp:
+			data = json.load(fp)
+	else:
+		classifier = sys.argv[1]
+		with open('data.json','r') as fp:
+			data = json.load(fp)
 
-	print file_name
-	# if not os.path.exists('sample.json'):
-		# parse_text()
-	with open('samples/' + file_name , 'r') as fp:
-		data = json.load(fp)
+
 
 	# Initialize dictionaries that contain folds
 	feature_folds = {}
@@ -54,7 +60,6 @@ def main():
 
 	# Make folds
 	for author in data:
-		print len(data[author])
 		for ind,passage in enumerate(data[author]):
 			feature_folds[ind%5].append(passage)
 			label_folds[ind%5].append(author)
