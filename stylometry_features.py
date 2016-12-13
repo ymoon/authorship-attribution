@@ -55,11 +55,12 @@ def get_n_gram_features(passage):
     bigram_frequency = OrderedDict()
     for i in bigrams:
         bigram_frequency[i] = 0
-    for first, second in zip(passage, passage[1:]):
-        bigram = first + second
+    for first, second, third in zip(passage, passage[1:], passage[2:]):
+        bigram = first + second + third
         if bigram in bigrams:
             bigram_frequency[bigram] += 1
     
     bigrams_list = []
     for key, value in bigram_frequency.items():
         bigrams_list.append(value)
+    return bigrams_list

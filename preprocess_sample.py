@@ -2,10 +2,42 @@ from nltk.tokenize import sent_tokenize
 import os, json
 
 # Returns dictionary mapping authors to list of passages
-def parse_text():
+def parse_text(compare):
     directory = os.listdir('AUTHORS')
     result = {}
-    for author in directory:
+
+
+    # Aristotle <-> Dickens 53.7%
+
+    # Remove Burroughs, Jefferson, Shakespeare, Stevenson
+
+    # Burroughs, Dickens, Jefferson, Stevenson
+    # write similarly
+
+    # Dickens   <-> Burroughs   52.5%
+    # Dickens   <-> Jefferson   56.6%
+    # Burroughs <-> Jefferson   54%
+
+    # Dickens   <-> Stevenson   50.2%
+    # Burroughs <-> Stevenson   52.8%
+    # Jefferson <-> Stevenson   56.8%
+
+    # Burroughs <-> Emerson     65%
+    # Dickens   <-> Emerson     62.7%
+    # Jefferson <-> Emerson     68.7%
+    # Stevenson <-> Emerson     62.5%
+
+    # Burroughs <-> Kant        52.3%
+    # Dickens   <-> Kant        68.7%
+    # Jefferson <-> Kant        56.4%
+    # Stevenson <-> Kant        50.4%   
+
+    # Shakespeare
+
+    # compare = ['JEFFERSON', 'TWAIN']
+    # print compare
+    print compare
+    for author in compare:
         result[author] = []
         files = os.listdir('AUTHORS/' + author)
         count = 0
@@ -24,8 +56,8 @@ def parse_text():
             except:
                 pass
 
-                            
-    with open('sample.json', 'w') as fp:
+    file_name = '_'.join(compare)               
+    with open('samples/' + file_name + '.json', 'w') as fp:
         json.dump(result, fp)
 
     return
