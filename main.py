@@ -29,13 +29,13 @@ def getFeatures(passages):
 	return bigram_features, word_features
 	# return stylo_features
 
-def main(authors):
+def main():
 	# if not os.path.exists('data.json'):
 	# 	parse_text()
 	# with open('data.json', 'r') as fp:
 	# 	data = json.load(fp)
 
-	file_name = '_'.join(authors)
+	file_name = '_'.join(['ARISTOTLE', 'DICKENS'])
 	print file_name
 	# if not os.path.exists('sample.json'):
 		# parse_text()
