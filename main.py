@@ -2,12 +2,13 @@ import sys, os, json
 from preprocess import parse_text
 from sklearn.svm import SVC
 from sklearn.linear_model import SGDClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from stylometry_features import get_stylometry_features
 from stylometry_features import get_n_gram_features
 from common_word_feature import feature_extract
 
 def getFeatures(passages):
-	# stylo_features = []
+	stylo_features = []
 	bigram_features = []
 	word_features = []
 	for p in passages:
@@ -21,12 +22,12 @@ def getFeatures(passages):
 		word_freq_list = feature_extract(p)
 
 		# append to feature matrices
-		# stylo_features.append(stylo_feats)
+		stylo_features.append(stylo_feats)
 		bigram_features.append(bigrams)
 		word_features.append(word_freq_list)
 
-	# return stylo_features, bigram_features, word_features
-	return bigram_features, word_features
+	return stylo_features, bigram_features, word_features
+	# return bigram_features, word_features
 	# return stylo_features
 
 def main():
@@ -35,11 +36,13 @@ def main():
 	# with open('data.json', 'r') as fp:
 	# 	data = json.load(fp)
 
-	file_name = '_'.join(['ARISTOTLE', 'DICKENS'])
+	file_name = sys.argv[1]
+	classifier = sys.argv[2]
+
 	print file_name
 	# if not os.path.exists('sample.json'):
 		# parse_text()
-	with open('samples/' + file_name + '.json', 'r') as fp:
+	with open('samples/' + file_name , 'r') as fp:
 		data = json.load(fp)
 
 	# Initialize dictionaries that contain folds
@@ -51,14 +54,29 @@ def main():
 
 	# Make folds
 	for author in data:
+		print len(data[author])
 		for ind,passage in enumerate(data[author]):
 			feature_folds[ind%5].append(passage)
 			label_folds[ind%5].append(author)
 
+
+
 	# Initialize classifiers
-	stylo_clf = SVC()
-	bigram_clf = SVC()
-	wordfreq_clf = SVC()
+	if classifier == 'svm':
+		stylo_clf = SVC()
+		bigram_clf = SVC()
+		wordfreq_clf = SVC()
+	elif classifier == 'knn':
+		stylo_clf = KNeighborsClassifier(n_neighbors=5)
+		bigram_clf = KNeighborsClassifier(n_neighbors=5)
+		wordfreq_clf = KNeighborsClassifier(n_neighbors=5)
+	elif classifier == 'sgd':
+		stylo_clf = SGDClassifier()
+		bigram_clf = SGDClassifier()
+		wordfreq_clf = SGDClassifier()	
+	else:
+		print "Incorrect classification type"	
+		sys.exit()
 
 	# Init accuracy sums to get average accuracy across 5 folds
 	stylo_acc_sum = 0
@@ -83,17 +101,17 @@ def main():
 				test_labels += label_folds[k]
 
 		# Get features
-		# stylo_train, bigram_train, wordfreq_train = getFeatures(train_passages)
-		bigram_train, wordfreq_train = getFeatures(train_passages)
+		stylo_train, bigram_train, wordfreq_train = getFeatures(train_passages)
+		# bigram_train, wordfreq_train = getFeatures(train_passages)
 		# stylo_train = getFeatures(train_passages)
-		# stylo_test, bigram_test, wordfreq_test = getFeatures(test_passages)
-		bigram_test, wordfreq_test = getFeatures(test_passages)
+		stylo_test, bigram_test, wordfreq_test = getFeatures(test_passages)
+		# bigram_test, wordfreq_test = getFeatures(test_passages)
 		# stylo_test = getFeatures(test_passages)
 		
 		# Fit SVM stylometry classifier and test
-		# stylo_clf.fit(stylo_train, train_labels)
-		# stylo_acc = stylo_clf.score(stylo_test, test_labels)
-		# stylo_acc_sum += stylo_acc
+		stylo_clf.fit(stylo_train, train_labels)
+		stylo_acc = stylo_clf.score(stylo_test, test_labels)
+		stylo_acc_sum += stylo_acc
 
 		
 		# Fit SVM character bigram classifier and test
@@ -106,20 +124,14 @@ def main():
 		wordfreq_acc = wordfreq_clf.score(wordfreq_test, test_labels)
 		wordfreq_acc_sum += wordfreq_acc
 		
-		'''
-		# Fit and test SGD classifier
-		sgd_clf.fit(train_features, train_labels)
-		sgd_acc = sgd_clf.score(test_features, test_labels)
-		sgd_acc_sum += sgd_acc
-		print "SGD "+str(j)+" Fold:", sgd_acc
-		'''
 
 	# Calculate and print total accuracies
-	# total_stylo_acc = stylo_acc_sum / 5.0
+	total_stylo_acc = stylo_acc_sum / 5.0
 	total_bigram_acc = bigram_acc_sum / 5.0
 	total_wordfreq_acc = wordfreq_acc_sum / 5.0
 
 	# print "Stylometry accuracy: ", total_stylo_acc
+	print "Stylometry feature accuracy: ", total_stylo_acc
 	print "Bigram freq accuracy: ", total_bigram_acc
 	print "Word freq accuracy: ", total_wordfreq_acc, '\n'
 

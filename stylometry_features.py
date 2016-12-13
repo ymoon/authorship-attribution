@@ -10,16 +10,16 @@ def get_stylometry_features(passage):
     stylo_fv = np.zeros(8)
 
     # note: the nltk.word_tokenize includes punctuation
-    tokens = nltk.word_tokenize(passage.lower())
-    words = word_tokenize(passage.lower())
-    sentences = sent_tokenize(passage)
-    vocab = set(words)
+    tokens = word_tokenize(passage.lower())
+    #words = word_tokenize(passage.lower())
+    sentences = sent_tokenize(passage.lower())
+    vocab = set(tokens)
     words_per_sentence = np.array([len(word_tokenize(s))
                                    for s in sentences])
    
     avg_tags = 0
     tags = set()
-    for i in sent_tokenize(passage):
+    for i in sentences:
         for word, tag in pos_tag(word_tokenize(i)):
             tags.add(tag)
         avg_tags += len(tags)
@@ -30,7 +30,7 @@ def get_stylometry_features(passage):
     # sentence length variation
     stylo_fv[1] = words_per_sentence.std()
     # Lexical diversity
-    stylo_fv[2] = len(vocab) / float(len(words))
+    stylo_fv[2] = len(vocab) / float(len(tokens))
     # Average unique POS tags per sentence
     stylo_fv[3] = float(avg_tags) / float(len(sent_tokenize(passage)))
  

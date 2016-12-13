@@ -6,5 +6,5 @@ authors = ['ARISTOTLE', 'DICKENS', 'DOYLE', 'EMERSON', 'HAWTHORNE', 'IRVING', 'K
 for i in range(len(authors)):
 	for j in range(i + 1, len(authors)):
 		compare = [authors[i], authors[j]]
-		preprocess_sample(compare)
-		# main(compare)
+		# parse_text(compare)
+		main(compare)
