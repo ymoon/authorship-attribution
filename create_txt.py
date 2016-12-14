@@ -1,8 +1,7 @@
 import os
 
-
 # Returns dictionary mapping authors to list of passages
-def parse_text():
+def create_resources():
     directory = os.listdir('AUTHORS')
     bigrams = {}
     words = {}
@@ -44,4 +43,4 @@ def retrieve_counts(bigrams, words, text):
             bigrams[b] = bigrams.get(b, 0) + 1
 
 if __name__ == '__main__':
-    parse_text()
+    create_resources()
