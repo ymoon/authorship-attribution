@@ -122,8 +122,8 @@ def main():
 
     # print "Stylometry accuracy: ", total_stylo_acc
     print("Stylometry feature accuracy: {}".format(total_stylo_acc))
-    print("Bigram freq accuracy: {}".forma(total_bigram_acc))
-    print("Word freq accuracy: {}{}".forma(total_wordfreq_acc, '\n'))
+    print("Bigram freq accuracy: {}".format(total_bigram_acc))
+    print("Word freq accuracy: {}{}".format(total_wordfreq_acc, '\n'))
 
     return
 
