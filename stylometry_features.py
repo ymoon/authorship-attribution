@@ -1,22 +1,20 @@
 import numpy as np
-import nltk
-import glob
-import os
 from collections import OrderedDict
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk import pos_tag
 
+
+# Get style features based on sentence structure
 def get_stylometry_features(passage):
     stylo_fv = np.zeros(8)
 
     # note: the nltk.word_tokenize includes punctuation
     tokens = word_tokenize(passage.lower())
-    #words = word_tokenize(passage.lower())
     sentences = sent_tokenize(passage.lower())
     vocab = set(tokens)
     words_per_sentence = np.array([len(word_tokenize(s))
                                    for s in sentences])
-   
+
     avg_tags = 0
     tags = set()
     for i in sentences:
@@ -33,7 +31,7 @@ def get_stylometry_features(passage):
     stylo_fv[2] = len(vocab) / float(len(tokens))
     # Average unique POS tags per sentence
     stylo_fv[3] = float(avg_tags) / float(len(sent_tokenize(passage)))
- 
+
     # Commas per sentence
     stylo_fv[4] = tokens.count(",") / float(len(sentences))
     # Semicolons per sentence
@@ -45,12 +43,14 @@ def get_stylometry_features(passage):
 
     return stylo_fv
 
+
+# Get features based on character n-grams
 def get_n_gram_features(passage):
     # Load bigrams file
     bigrams = set()
     with open('bigrams.txt', 'r') as INPUTFILE:
         for line in INPUTFILE.readlines():
-            bigrams.add(line)            
+            bigrams.add(line)
 
     bigram_frequency = OrderedDict()
     for i in bigrams:
@@ -59,7 +59,7 @@ def get_n_gram_features(passage):
         bigram = first + second + third
         if bigram in bigrams:
             bigram_frequency[bigram] += 1
-    
+
     bigrams_list = []
     for key, value in bigram_frequency.items():
         bigrams_list.append(value)

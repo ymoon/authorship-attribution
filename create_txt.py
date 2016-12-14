@@ -1,5 +1,6 @@
 import os
 
+
 # Returns dictionary mapping authors to list of passages
 def parse_text():
     directory = os.listdir('AUTHORS')
@@ -9,12 +10,14 @@ def parse_text():
         files = os.listdir('AUTHORS/' + author)
         for textfile in files:
             try:
-                with open('AUTHORS/' + author + '/' + textfile, 'r') as INPUTFILE:
+                # Load initial data
+                with open('AUTHORS/' + author + '/' + textfile, 'r') \
+                        as INPUTFILE:
                     text = INPUTFILE.read().encode('latin-1')
                     retrieve_counts(bigrams, words, text.lower().split())
             except:
                 pass
-                            
+
     with open('bigrams.txt', 'w') as fp:
         count = 0
         for val in sorted(bigrams, key=bigrams.get, reverse=True):
@@ -32,6 +35,7 @@ def parse_text():
             count += 1
 
     return
+
 
 def retrieve_counts(bigrams, words, text):
     for token in text:
